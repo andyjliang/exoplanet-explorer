@@ -41,9 +41,7 @@ Instructions:
    * @return {Promise}    - A Promise that resolves when the XHR succeeds and fails otherwise.
    */
   function get(url) {
-    return fetch(url, {
-      method: 'get'
-    });
+    return fetch(url);
   }
 
   /**
@@ -64,6 +62,18 @@ Instructions:
 
     Your code goes here!
      */
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json')
+    .then(function(response){
+    	addSearchHeader(response.query);
+    	return getJSON(response.results[0]);
+    })
+    .catch(function(){
+    	throw Error('Requesting main json failed');
+    })
+    .then(createPlanetThumb)
+    .catch(function(error){
+    	addSearchHeader('unknown');
+    	console.log(error);
+    });
   });
 })(document);
